@@ -26,12 +26,9 @@ router.get('/:id', async (req, res, next) => {
     const {id} = req.params;
     const result = await contactsOperations.getContactById(id);
     if(!result){
-      res.status(404).json({
-        status:"error",
-        code: 404,
-        massege: "Not found",
-      });
-      return;
+      const error = new Error("Not found");
+      error.status = 404;
+      throw error;
     }
     res.json({
       status: "success",
@@ -46,7 +43,18 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const result = await contactsOperations.addContact(req.body);
+    res.status(201).json({
+      status: "success",
+      code: 201,
+      data: {
+        result
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.delete('/:contactId', async (req, res, next) => {
