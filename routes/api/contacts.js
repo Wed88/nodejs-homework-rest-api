@@ -71,12 +71,53 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await contactsOperations.removeContact(id);
+    if(!result){
+      const error = new Error("Not found");
+      error.status = 404;
+      throw error;
+    }
+    res.json({
+      status: "success",
+      code: 200,
+      message: "contact deleted",
+      data: {
+        result,
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.put('/:id', async (req, res, next) => {
+  try {
+    const {error} = contactSchema.validate(req.body);
+    if(error){
+      error.status = 400;
+      error.message = "missing fields";
+      throw error;
+    }
+    const {id} = req.params;
+    const result = await contactsOperations.updateContact(id, req.body);
+    if(!result){
+      const error = new Error("Not found");
+      error.status = 404;
+      throw error;
+    }
+    res.json({
+      status: "success",
+      code: 200,
+      data: {
+        result,
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router
