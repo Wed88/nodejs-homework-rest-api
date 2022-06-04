@@ -10,7 +10,7 @@ const contactSchema = Joi.object({
 
 const router = express.Router()
 
-const contactsOperations = require("../../models/contacts")
+const contactsOperations = require("../../models/contacts/contacts")
 
 router.get('/', async (req, res, next) => {
   try {
