@@ -27,7 +27,7 @@ const joiSchema = Joi.object({
 
 const Contact = model('contact', contactSchema);
 
-module.exports(
+module.exports = {
     Contact,
     joiSchema,
-)
+}

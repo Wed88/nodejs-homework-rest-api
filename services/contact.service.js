@@ -1,5 +1,6 @@
 const {Contact} = require('../models/contact');
 
+
 const listContacts = async () => {
   return Contact.find();
 }
@@ -17,7 +18,7 @@ const addContact = async (body) => {
 }
 
 const updateContact = async (id, body) => {
-  return Contact.findByIdAndUpdate(id, body);
+  return Contact.findByIdAndUpdate(id, body, {new: true});
 }
 
 module.exports = {
