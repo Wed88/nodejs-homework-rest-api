@@ -23,6 +23,10 @@ const joiSchema = Joi.object({
     email: Joi.string().email({minDomainSegments:2}).required(),
     phone: Joi.number().min(10).required(),
     favorite: Joi.bool(),
+  });
+
+  const patchSchema = Joi.object({
+    favorite: Joi.bool().required(),
   })
 
 const Contact = model('contact', contactSchema);
@@ -30,4 +34,5 @@ const Contact = model('contact', contactSchema);
 module.exports = {
     Contact,
     joiSchema,
+    patchSchema,
 }
