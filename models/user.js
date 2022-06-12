@@ -16,10 +16,10 @@ const schema = new Schema({
     enum: ["starter", "pro", "business"],
     default: "starter"
   },
-  // token: {
-  //   type: String,
-  //   default: null,
-  // },
+  token: {
+    type: String,
+    default: null,
+  },
 }, {timestamps: true});
 
 const signupSchema = Joi.object({

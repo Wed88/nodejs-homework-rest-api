@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const { createError } = require('../helpers/errors');
 const { User } = require('../models/user');
-const { SECRET_KEY } = require('../helpers/env')
+const { SECRET_KEY } = require('../helpers/env');
 
 const signupUser = async (userData) => {
     const result = await User.findOne({ email: userData.email });
@@ -37,11 +37,25 @@ const loginUser = async ({ email, password }) => {
         subscription: user.subscription,
     };
 
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1d' });
-    return { token };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+    await User.findByIdAndUpdate(user._id, {token})
+    return { token }
+}
+
+const authenticateUser = async (token) => {
+    try {
+        const payload = jwt.verify(token, SECRET_KEY);
+        console.log('payload', payload);
+        const { id } = payload;
+        return await User.findById(id);
+    } catch (error) {
+        return null
+    }
+    
 }
 
 module.exports = {
     signupUser,
-    loginUser
+    loginUser,
+    authenticateUser
 }
