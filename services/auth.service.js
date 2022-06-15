@@ -20,7 +20,7 @@ const signupUser = async (userData) => {
 };
 
 const loginUser = async ({ email, password }) => {
-    const user = await User.findOne({ email});
+    const user = await User.findOne({ email });
 
     if (!user) {
         throw createError(401, "Email or password is wrong")
@@ -38,9 +38,13 @@ const loginUser = async ({ email, password }) => {
     };
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-    await User.findByIdAndUpdate(user._id, {token})
+    await User.findByIdAndUpdate(user._id, { token })
     return { token }
-}
+};
+
+const logoutUser = async (id) => {
+    await User.findByIdAndUpdate(id, { token: null });
+ };
 
 const authenticateUser = async (token) => {
     try {
@@ -57,5 +61,6 @@ const authenticateUser = async (token) => {
 module.exports = {
     signupUser,
     loginUser,
+    logoutUser,
     authenticateUser
 }
