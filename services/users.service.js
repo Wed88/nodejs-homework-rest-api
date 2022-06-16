@@ -49,7 +49,6 @@ const logoutUser = async (id) => {
 const authenticateUser = async (token) => {
     try {
         const payload = jwt.verify(token, SECRET_KEY);
-        console.log('payload', payload);
         const { id } = payload;
         return await User.findById(id);
     } catch (error) {

@@ -9,7 +9,7 @@ router.get('/', auth, listContacts);
 
 router.get('/:id', getContactById);
 
-router.post('/', validateRequest(joiSchema, "missing required name field"), addContact);
+router.post('/', validateRequest(joiSchema, "missing required name field"), auth, addContact);
 
 router.delete('/:id', removeContact);
 

@@ -1,8 +1,8 @@
-const authService = require('../services/auth.service')
+const userService = require('../services/users.service')
 
 const signupUser = async (reg, res, next) => {
     try {
-        const user = await authService.signupUser(reg.body);
+        const user = await userService.signupUser(reg.body);
         res.json({
             email: user.email,
             subscription: user.subscription,
@@ -16,7 +16,7 @@ const signupUser = async (reg, res, next) => {
 
 const loginUser = async (reg, res, next) => {
     try {
-        const token = await authService.loginUser(reg.body);
+        const token = await userService.loginUser(reg.body);
         res.json(token)
     } catch (error) {
         next(error)
@@ -26,7 +26,7 @@ const loginUser = async (reg, res, next) => {
 
 const logoutUser = async (reg, res, next) => {
     try {
-        await authService.logoutUser(reg.user._id);
+        await userService.logoutUser(reg.user._id);
         res.sendStatus(204);
     } catch (error) {
         next(error)

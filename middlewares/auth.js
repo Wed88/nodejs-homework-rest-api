@@ -1,5 +1,5 @@
 const { createError } = require("../helpers/errors");
-const {authenticateUser} = require('../services/auth.service')
+const {authenticateUser} = require('../services/users.service')
 
 const auth = async (reg, res, next) => {
     const { authorization = "" } = reg.headers;
@@ -14,6 +14,7 @@ const auth = async (reg, res, next) => {
         next(createError(401,'Not authorized'));
     }
 
+    reg.user = user;
     next();
 }
 
