@@ -38,12 +38,12 @@ const loginUser = async ({ email, password }) => {
     };
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-    await User.findByIdAndUpdate(user._id, { token })
-    return { token }
+    await User.findByIdAndUpdate(user._id, { token, email, user })
+    return { token, email, user }
 };
 
-const logoutUser = async (id) => {
-    await User.findByIdAndUpdate(id, { token: null });
+const logoutUser = async (_id) => {
+    await User.findByIdAndUpdate(_id, { token: null });
  };
 
 const authenticateUser = async (token) => {
