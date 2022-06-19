@@ -1,19 +1,20 @@
-const express = require('express')
-const router = express.Router()
-const {listContacts, getContactById, addContact, removeContact, updateContact, updateStatusContact} = require('../../controllers/contacts')
-const {joiSchema, patchSchema} = require('../../models/contact')
-const {validateRequest} = require('../../middlewares/validateRequest')
+const express = require('express');
+const router = express.Router();
+const { listContacts, getContactById, addContact, removeContact, updateContact, updateStatusContact } = require('../../controllers/contacts');
+const { joiSchema, patchSchema } = require('../../models/contact');
+const { validateRequest } = require('../../middlewares/validateRequest');
+const { auth } = require('../../middlewares/auth');
 
-router.get('/', listContacts)
+router.get('/', auth, listContacts);
 
-router.get('/:id', getContactById)
+router.get('/:id', getContactById);
 
-router.post('/',validateRequest(joiSchema,"missing required name field"), addContact)
+router.post('/', validateRequest(joiSchema, "missing required name field"), auth, addContact);
 
-router.delete('/:id', removeContact)
+router.delete('/:id', removeContact);
 
-router.put('/:id',validateRequest(joiSchema,"missing fields"), updateContact)
+router.put('/:id', validateRequest(joiSchema, "missing fields"), updateContact);
 
-router.patch('/:id/favorite',validateRequest(patchSchema,"missing field favorite"), updateStatusContact)
+router.patch('/:id/favorite', validateRequest(patchSchema, "missing field favorite"), updateStatusContact);
 
-module.exports = router
+module.exports = router;
