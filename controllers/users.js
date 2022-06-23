@@ -9,6 +9,7 @@ const signupUser = async (reg, res, next) => {
             user: {
                 email: user.email,
                 subscription: user.subscription,
+                avatarURL: user.avatarURL,
             }
         })
     } catch (error) {
