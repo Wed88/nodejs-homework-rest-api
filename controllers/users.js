@@ -1,4 +1,6 @@
 const userService = require('../services/users.service')
+const { uploadImage } = require('../services/image.service');
+const { updateUser } = require('../services/users.service');
 
 const signupUser = async (reg, res, next) => {
     try {
@@ -63,9 +65,29 @@ const currentUser = async (req, res, next) => {
   }
 };
 
+const updateAvatar = async (req, res, next) => {
+    try {
+
+        const { _id: id } = req.user;
+        const avatarURL = await uploadImage(id, req.file);
+        const user = await updateUser(id, { avatarURL });
+
+        res.status(200).json({
+         data: {
+            avatarURL: user.avatarURL,
+        },
+        });
+        
+    } catch (error) {
+        next(error);
+    }
+  
+}
+
 module.exports = {
     signupUser,
     loginUser,
     logoutUser,
-    currentUser
+    currentUser,
+    updateAvatar
 }
