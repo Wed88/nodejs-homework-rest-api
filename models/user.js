@@ -25,8 +25,15 @@ const schema = new Schema({
     type: String,
     default: function () { 
       return gravatar.url(this.email, {}, true)
-    },
-    
+    },    
+  },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, 'Verify token is required'],
   },
 }, {timestamps: true});
 
