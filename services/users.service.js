@@ -58,13 +58,18 @@ const authenticateUser = async (token) => {
 };
 
 const updateUser = async (id, data) => {
-    return User.findByIdAndUpdate(id,data, {new:true})
-}
+    return User.findByIdAndUpdate(id, data, { new: true })
+};
+
+const findUser = async (filters) => { 
+    return User.findOne(filters);
+};
 
 module.exports = {
     signupUser,
     loginUser,
     logoutUser,
     authenticateUser,
-    updateUser
+    updateUser,
+    findUser
 }
