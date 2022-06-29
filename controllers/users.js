@@ -89,9 +89,8 @@ const updateAvatar = async (req, res, next) => {
 
 const confirm = async (reg, res, next) => {
     try {
-        // const user = await userService.signupUser(reg.body);
         const { verificationToken } = reg.params;
-        const user = userService.findUser({ verificationToken });
+        const user = await userService.findUser({ verificationToken });
         
         if (!user) {
             throw createError(404,"User not found");
@@ -110,11 +109,34 @@ const confirm = async (reg, res, next) => {
     
 };
 
+const resend = async (reg, res, next) => {
+    try {
+        const { email } = reg.body;
+        const user = await userService.findUser({ email });
+
+        if (!user) {
+            throw createError(404, "User was not found")
+        }
+
+        await emailService.sendEmail(user.email, user.verificationToken);
+
+        res.status(200).json({
+            status: "success",
+            code: 200,
+            message: "Verification email sent",
+        })
+    } catch (error) {
+        next(error)
+    }
+    
+};
+
 module.exports = {
     signupUser,
     loginUser,
     logoutUser,
     currentUser,
     updateAvatar,
-    confirm
+    confirm,
+    resend
 }
