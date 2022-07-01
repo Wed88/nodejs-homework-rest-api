@@ -11,8 +11,8 @@ router.post('/login', validateRequest(loginSchema, "Bad Request"), loginUser);
 router.post('/logout/:id', auth, logoutUser);
 router.get('/current', auth, currentUser);
 router.patch('/avatars', auth, upload.single('avatar'), updateAvatar);
-router.get('verify/:verificationToken', confirm);
-router.post('verify', resend);
+router.get('/verify/:verificationToken', confirm);
+router.post('/verify', resend);
 
 module.exports = router
 
