@@ -1,10 +1,13 @@
-const userService = require('../services/users.service')
+const userService = require('../services/users.service');
+const emailService  = require('../services/email.service');
 const { uploadImage } = require('../services/image.service');
 const { updateUser } = require('../services/users.service');
+const { createError } = require('../helpers/errors');
 
 const signupUser = async (reg, res, next) => {
     try {
         const user = await userService.signupUser(reg.body);
+        await emailService.sendEmail(user.email, user.verificationToken);
         res.status(201).json({
             status: "created",
             code: 201,
@@ -13,6 +16,54 @@ const signupUser = async (reg, res, next) => {
                 subscription: user.subscription,
                 avatarURL: user.avatarURL,
             }
+        })
+    } catch (error) {
+        next(error)
+    }
+    
+};
+
+const confirm = async (reg, res, next) => {
+    try {
+        const { verificationToken } = reg.params;
+        const user = await userService.findUser({ verificationToken });
+        
+        if (!user) {
+            throw createError(404,"User not found");
+        }
+
+        await userService.updateUser(user._id, { verify: true, verificationToken: null });
+
+        res.status(200).json({
+            status: "success",
+            code: 200,
+            message: "Verification successful",
+        })
+    } catch (error) {
+        next(error)
+    }
+    
+};
+
+const resend = async (reg, res, next) => {
+    try {
+        const { email } = reg.body;
+        const user = await userService.findUser({ email });
+
+        if (!user) {
+            throw createError(404, "User was not found")
+        }
+
+         if (user.verify) {
+            throw createError(400, `"Verification has already been passed"`);
+        }
+
+        await emailService.sendEmail(user.email, user.verificationToken);
+
+        res.status(200).json({
+            status: "success",
+            code: 200,
+            message: "Verification email sent",
         })
     } catch (error) {
         next(error)
@@ -73,21 +124,25 @@ const updateAvatar = async (req, res, next) => {
         const user = await updateUser(id, { avatarURL });
 
         res.status(200).json({
-         data: {
-            avatarURL: user.avatarURL,
-        },
+            data: {
+                avatarURL: user.avatarURL,
+            },
         });
         
     } catch (error) {
         next(error);
     }
   
-}
+};
+
+
 
 module.exports = {
     signupUser,
     loginUser,
     logoutUser,
     currentUser,
-    updateAvatar
+    updateAvatar,
+    confirm,
+    resend
 }
